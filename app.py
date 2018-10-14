@@ -1,8 +1,9 @@
+import os
 from flask import Flask, render_template, jsonify, json, session, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(_name_)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config[
@@ -14,7 +15,7 @@ cors = CORS(app, resources={r'/*': {"origins": '*'}})
 
 
 class Todo_App(database.Model):
-    __tablename__ = 'todo'
+    _tablename_ = 'todo'
     id = database.Column(database.Integer, primary_key=True)
     title = database.Column(database.String(20))
     description = database.Column(database.String(100))
@@ -25,6 +26,11 @@ database.create_all()  # creating tables
 
 
 # --------------------------------------- rounting path for add function ------------------------------------------------
+
+
+@app.route('/')
+def hello():
+    return 'app is running - home'
 
 @app.route('/todo/api/v1.0/task/add', methods=['POST'])
 def add():  # add function.
@@ -128,4 +134,8 @@ def delete(id):  # delete function
     return jsonify({'Message': 'ID is Deleted'})
 
 
-app.run(debug=True, port=5000)  # port change
+
+PORT = int( os.environ.get("PORT") )
+
+app.run(host='0.0.0.0', port=PORT)
+print("app is running on port ", PORT)
